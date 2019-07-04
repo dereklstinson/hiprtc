@@ -8,4 +8,4 @@ package hiprtc
 #cgo LDFLAGS: -L/home/derek/amd/github.com/hip/lib -lhiprtc -lhip_hcc
 */   
 import "C" 
-  
+   

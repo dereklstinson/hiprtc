@@ -63,17 +63,37 @@ func (p *Program) GetLoweredName(nameExpression string) (string, error) {
 	return C.GoString(char), err
 
 }
+func (p * Program)GetLog()(log string, err error){
+	size,err:=p.getlogsize()
+	if err !=nil{
+		return "",err
+	}
+	x:= make([]C.char,size)
+	err = result(C.gohiprtcGetProgramLog(p.p,&x[0])).error()
+	log=C.GoString(&x[0])
+	return log,err
+}
+func (p *Program)getlogsize()(size uint,err error){
+	var logsize C.size_t
+	err = result(C.gohiprtcGetProgramLogSize(p.p,&logsize)).error()
+	return (uint)(logsize),err
+}
+func (p *Program)GetCode()(code string,err error){
+	size,err:=p.getcodesize()
+	if err !=nil{
+		return "",err
+	}
+	x:= make([]C.char,size)
+	err = result(C.gohiprtcGetCode(p.p,&x[0])).error()
+	code=C.GoString(&x[0])
+	return code,err
+}
+func (p *Program)getcodesize()(size uint,err error){
+	var logsize C.size_t
+	err = result(C.gohiprtcGetCodeSize(p.p,&logsize)).error()
+	return (uint)(logsize),err
+}
 
-/*
-gohiprtcResult gohiprtcGetLoweredName(gohiprtcProgram prog,const char* name_expression,const char** lowered_name);
-gohiprtcResult gohiprtcGetProgramLog(gohiprtcProgram prog, char* log);
-gohiprtcResult gohiprtcGetProgramLogSize(gohiprtcProgram prog,size_t* logSizeRet);
-gohiprtcResult gohiprtcGetCode(gohiprtcProgram prog, char* code);
-gohiprtcResult gohiprtcGetCodeSize(gohiprtcProgram prog, size_t* codeSizeRet);
-
-
-
-*/
 
 func (r result) error() error {
 	switch r {
